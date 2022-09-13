@@ -1,0 +1,89 @@
+defining grammar for transformation (critical point)
+Ex : Z = X+Y 
+{
+	source_column 				: {X,Y}
+	taget_column 				: {Z}
+	transformation_operation 	: arithmetic								string
+	transformation_operator 	: addition/multiply/div/sub/hydrid			substring/trim/ltrim/rtrim
+	expression 					: X+(Y*A)
+}
+
+------------------------------------------------------------------------------------------------
+
+
+empid,emptype
+C1,'Contractor'
+F2,'full time'
+
+
+Ex : Z =  X+(Y*A) hybrid 
+{
+	source_column 				: {X,Y}
+	taget_column 				: {Z}
+	transformation_operation 	: hydrid								  	
+	transformation_operator 	: 
+	expression 					: X+(Y*A)
+}
+------------------------------------------------------------------------------------------------
+
+Ex : Z = substr(input_col,2,5)
+	 Z = substr(input_col,-5)
+	 Z = trim(input_col)
+	 Z = lpad(input_col, <<max_lenght>> , <<padding_character>>)
+	 
+{
+	source_column 				: {X}
+	taget_column 				: {Z}
+	transformation_operation 	: string
+	transformation_operator 	: lpad
+	expression 					: 
+	params	:
+		{
+			max_lenght : 35
+			padding_character : 'x'
+			
+		}
+}
+
+{
+	source_column 				: {X}
+	taget_column 				: {Z}
+	transformation_operation 	: string
+	transformation_operator 	: substr
+	expression 					: 
+	params	:
+		{
+			start_position : 2
+			no_of_character : 5
+		}
+}
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+date conversion
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+OR Ex : Z_output = X+(Y*A) some other standard json format 
+		Z_output_1 = Y*A
+
+
+Z_output_1 = Y*A			--- single row
+------
+
+Z_temp = Y*A
+Z_output = Z_temp * X
+drop Z_temp
+
+---
+
+port		port_type		expression
+X			input
+Y			input
+Z_temp		var				Y*A
+Z_output_1	output			Z_temp
+Z_output	output			X+Z_temp
