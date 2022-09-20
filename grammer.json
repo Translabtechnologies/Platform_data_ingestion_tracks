@@ -1,0 +1,90 @@
+[{
+	"source_column" : ["X","Y","D"],
+	"target_column": "Add",
+	"transformation_operation":"arithmetic",
+	"transformation_operator":"addition",
+	"expression": "None"
+},
+{
+	"source_column" : ["X","Y"],
+	"target_column": "Sub",
+	"transformation_operation":"arithmetic",
+	"transformation_operator":"subtraction",
+	"expression": "None"
+},
+{
+	"source_column" : ["X","Y","D"],
+	"target_column": "Mul",
+	"transformation_operation":"arithmetic",
+	"transformation_operator":"multiplication",
+	"expression": "None"
+},
+{
+	"source_column" : ["X","Y"],
+	"target_column": "Div",
+	"transformation_operation":"arithmetic",
+	"transformation_operator":"division",
+	"expression": "None"
+},
+{
+	"source_column" : ["X","Y"],
+	"target_column": "Hyb",
+	"transformation_operation":"arithmetic",
+	"transformation_operator":"hybrid",
+	"expression":"X+(Y*X)"
+},
+{
+	"source_column" : ["A"],
+	"target_column" : "Lpad",
+	"transformation_operation": "string",
+	"transformation_operator" 	: "lpad",
+	"expression"	: "None",
+	"params"	:
+		{
+			"max_length" : 10,
+			"padding_character" : "x"
+		}
+},
+{
+	"source_column" : ["B"],
+	"target_column" :"Substring",
+	"transformation_operation": "string",
+	"transformation_operator" 	: "substr",
+	"expression"	: "None",
+	"params"	:
+		{
+			"start_position" : 2,
+			"no_of_character": 5
+		}
+},
+{
+	"source_column" : ["C"],
+	"target_column" :"Trim",
+	"transformation_operation": "string",
+	"transformation_operator" 	: "trim",
+	"expression"	: "None"
+},
+{
+	"source_column" : ["C"],
+	"target_column" :"Rtrim",
+	"transformation_operation": "string",
+	"transformation_operator" 	: "rtrim",
+	"expression"	: "None"
+},
+{
+	"source_column" : ["C"],
+	"target_column" :"Ltrim",
+	"transformation_operation": "string",
+	"transformation_operator" 	: "ltrim",
+	"expression"	: "None"
+},
+{
+	"source_column" : ["D"],
+	"target_column" :"DateConversion",
+	"transformation_operation": "date",
+	"transformation_operator" 	: "UTC",
+	"expression"	: "None"
+}
+]
+
+
