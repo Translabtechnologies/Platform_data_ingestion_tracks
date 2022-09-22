@@ -1,37 +1,32 @@
 {
-   "source": [
-      {
+   "source": {
+      "s_df_1": {
          "sourceType": "csv",
-         "sourcePath": "mnt/mnt-cem/error/bidgely/",
-         "sourceDataframe": "s_df_1"
+         "sourcePath": "mnt/mnt-cem/error/bidgely/"
       },
-      {
+      "s_df_2": {
          "sourceType": "parquet",
-         "sourcePath": "mnt/mnt-cem/error/bidgely/",
-         "sourceDataframe": "s_df_2"
+         "sourcePath": "mnt/mnt-cem/error/bidgely/"
       },
-      {
+      "s_df_3": {
          "sourceType": "MySql",
-         "sourceInfo": "",
-         "sourceDataframe": "s_df_3"
+         "sourceInfo": ""
       }
-   ],
-   "target": [
-      {
+   },
+   "target": {
+      "t_df_1": {
          "targetType": "csv",
          "targetPath": "mnt/mnt-cem/error/bidgely/",
-         "targetDataframe": "t_df_1",
          "patitionType": [
             "append,replace"
          ]
       },
-      {
+      "t_df_2": {
          "targetType": "parquet",
          "targetPath": "mnt/mnt-cem/error/bidgely/",
-         "targetDataframe": "t_df_2",
          "patitionType": [
             "append,replace"
          ]
       }
-   ]
+   }
 }
