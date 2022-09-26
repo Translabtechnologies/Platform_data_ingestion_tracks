@@ -1,0 +1,17 @@
+Backlog :
+	1) Source 
+			1) instead of typical csv always take delimited file -- ",", extra header : delimited = ',/I,~'
+			
+	2) Data type casting
+	3) Bulk rename
+	4) Writing target
+			1) No of parition
+			2) mode of writing
+			
+	5) #funcValidateGrammar(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name)
+	6) Transformation :
+		6.1) --> Rename 
+		6.2) --> hardcoded/parameterized value to a column [Example -- Hardcode to "Maximo"		WORKORDER	SourceSystem]
+
+	7) Replicate to MS Azure
+	8) Notebook calling

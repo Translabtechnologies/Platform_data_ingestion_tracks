@@ -1,0 +1,135 @@
+{
+	"source": {
+		"s_df_1": {
+			"sourceType": "csv",
+			"sourcePath": "C:/CS-PEROSNAL/Translab/Work/Data_Platform/testmetadata.csv"
+		},
+		"s_df_2": {
+			"sourceType": "parquet",
+			"sourcePath": "C:/CS-PEROSNAL/Translab/Work/Data_Platform/Platform_data_ingestion_tracks-main/wo_parquet"
+		},
+		"s_df_3": {
+			"sourceType": "MySql",
+			"sourceInfo": ""
+		}
+	},
+	"target": {
+		"t_df_1": {
+			"targetType": "csv",
+			"targetPath": "mnt/mnt-cem/error/bidgely/",
+			"partition": {
+			"strategy": "append/replace",
+			"type": "hash/record",
+			"hashColumn": "X",
+			"recNum": 1000000
+			}
+		},
+		"t_df_2": {
+			"targetType": "parquet",
+			"targetPath": "mnt/mnt-cem/error/bidgely/",
+			"partition": {
+			"strategy": "append/replace",
+			"type": "hash/record",
+			"hashColumn": "X",
+			"recNum": 1000000
+			}	
+		}
+	},
+	"transformation": [{
+			"dataframe" : "s_df_1",
+			"source_column": ["X","Y"],
+			"target_column": "Add",
+			"transformation_operation": "arithmetic",
+			"transformation_operator": "addition",
+			"expression": "None"
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["X","Y"],
+			"target_column": "Sub",
+			"transformation_operation": "arithmetic",
+			"transformation_operator": "subtraction",
+			"expression": "None"
+    },
+    {		"dataframe" : "s_df_2",
+			"source_column": ["X","Y"],
+			"target_column": "Mul",
+			"transformation_operation": "arithmetic",
+			"transformation_operator": "multiplication",
+			"expression": "None"
+    },
+    {
+			"dataframe" : "s_df_2",
+			"source_column": ["X","Y"],
+			"target_column": "Div",
+			"transformation_operation": "arithmetic",
+			"transformation_operator": "division",
+			"expression": "None"
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["X","Y"],
+			"target_column": "Hyb",
+			"transformation_operation": "arithmetic",
+			"transformation_operator": "hybrid",
+			"expression": "X+(Y*X)"
+    },
+    {
+			"dataframe" : "s_df_2",
+			"source_column": ["A"],
+			"target_column": "Lpad",
+			"transformation_operation": "string",
+			"transformation_operator": "lpad",
+			"expression": "None",
+			"params":
+			{
+				"max_length":"10",
+				"padding_character":"x"
+			}
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["B"],
+			"target_column": "Substring",
+			"transformation_operation": "string",
+			"transformation_operator": "substr",
+			"expression": "None",
+			"params": {
+				"start_position": "2",
+				"no_of_character": "5"
+			}
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["C"],
+			"target_column": "Trim",
+			"transformation_operation": "string",
+			"transformation_operator": "trim",
+			"expression": "None"
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["C"],
+			"target_column": "Rtrim",
+			"transformation_operation": "string",
+			"transformation_operator": "rtrim",
+			"expression": "None"
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["C"],
+			"target_column": "Ltrim",
+			"transformation_operation": "string",
+			"transformation_operator": "ltrim",
+			"expression": "None"
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["D"],
+			"target_column": "DateConversion",
+			"transformation_operation": "date",
+			"transformation_operator": "UTC",
+			"expression": "None"
+    }
+  ]
+}

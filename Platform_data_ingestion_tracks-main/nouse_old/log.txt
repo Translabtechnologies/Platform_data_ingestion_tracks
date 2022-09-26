@@ -1,0 +1,2 @@
+1 C:\CS-PEROSNAL\Translab\Work\Data_Platform\Platform_data_ingestion_tracks-main wo_grammar.json wo.py C:\CS-PEROSNAL\Translab\Work\Data_Platform\Platform_data_ingestion_tracks-main\Notebook Y
+2 C:\CS-PEROSNAL\Translab\Work\Data_Platform\Platform_data_ingestion_tracks-main wo_grammar.json wostatus.py C:\CS-PEROSNAL\Translab\Work\Data_Platform\Platform_data_ingestion_tracks-main\Notebook Y

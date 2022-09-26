@@ -1,0 +1,135 @@
+{
+	"source": {
+		"s_df_1": {
+			"sourceType": "csv",
+			"sourcePath": "C:/CS-PEROSNAL/Translab/Work/Data_Platform/Platform_data_ingestion_tracks-main/Input_DL_RZ/testmetadata.csv",
+			"sourceschema" : " \"A\" ,\"X\" ,\"B\" ,\"Y\" ,\"D\" "
+		},
+		"s_df_2": {
+			"sourceType": "parquet",
+			"sourcePath": "C:/CS-PEROSNAL/Translab/Work/Data_Platform/Platform_data_ingestion_tracks-main/Input_DL_RZ/wo_parquet",
+			"sourceschema" : ""
+		},
+		"s_df_3": {
+			"sourceType": "Mysql",
+			"sourceInfo": "",
+			"sourceschema" : ""
+		}
+	},
+	"target": {
+		"t_df_1": {
+			"targetType": "parquet",
+			"targetPath": "C:/CS-PEROSNAL/Translab/Work/Data_Platform/Platform_data_ingestion_tracks-main/Output_DL_SZ/DL_WOSTATUS",
+			"targetschema" : " \"A\" ,\"X\" ,\"B\" ,\"Y\" ,\"D\" ,\"Y\" ,\"col_Add\" ,\"col_Sub\" ,\"col_Hyb\" ,\"col_Substring\" ,\"col_Lpad\" ,\"col_Trim\" , \"col_Rtrim\" ,\"col_DateConversion\" ",
+			"sourceDF" : "s_df_1",
+			"partition": {
+			"strategy": "append/replace",
+			"type": "hash/record",
+			"hashColumn": "X",
+			"recNum": 1000000
+			}
+		},
+		"t_df_2": {
+			"targetType": "csv",
+			"targetPath": "mnt/mnt-cem/error/bidgely/",
+			"targetschema" : "",
+			"sourceDF" : "s_df_2",
+			"partition": {
+			"strategy": "append/replace",
+			"type": "hash/record",
+			"hashColumn": "X",
+			"recNum": 1000000
+			}	
+		}
+	},
+	"transformation": [{
+			"dataframe" : "s_df_1",
+			"source_column": ["X","Y"],
+			"target_column": "col_Add",
+			"transformation_operation": "arithmetic",
+			"transformation_operator": "addition",
+			"expression": "None"
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["X","Y"],
+			"target_column": "col_Sub",
+			"transformation_operation": "arithmetic",
+			"transformation_operator": "subtraction",
+			"expression": "None"
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["X","Y"],
+			"target_column": "col_Hyb",
+			"transformation_operation": "arithmetic",
+			"transformation_operator": "hybrid",
+			"expression": "X+(Y*X)"
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["B"],
+			"target_column": "col_Substring",
+			"transformation_operation": "string",
+			"transformation_operator": "substr",
+			"expression": "None",
+			"params": {
+				"start_position": "2",
+				"no_of_character": "5"
+			}
+    },
+	{
+			"dataframe" : "s_df_1",
+			"source_column": ["A"],
+			"target_column": "col_Lpad",
+			"transformation_operation": "string",
+			"transformation_operator": "lpad",
+			"expression": "None",
+			"params":
+			{
+				"max_length":"10",
+				"padding_character":"x"
+			}
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["A"],
+			"target_column": "col_Trim",
+			"transformation_operation": "string",
+			"transformation_operator": "trim",
+			"expression": "None"
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["A"],
+			"target_column": "col_Rtrim",
+			"transformation_operation": "string",
+			"transformation_operator": "rtrim",
+			"expression": "None"
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["A"],
+			"target_column": "col_Ltrim",
+			"transformation_operation": "string",
+			"transformation_operator": "ltrim",
+			"expression": "None"
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["D"],
+			"target_column": "col_DateConversion",
+			"transformation_operation": "date",
+			"transformation_operator": "UTC",
+			"expression": "None",
+			"params":
+			{
+				"source_timezone":"America/New_York",
+				"source_timeformat":"dd-MM-yyyy HH:mm:ss",
+				"target_timeformat":"to_utc_timestamp",
+				"target_timeformat":"dd-MM-yyyy HH:mm:ss"
+			}
+			
+    }
+  ]
+}

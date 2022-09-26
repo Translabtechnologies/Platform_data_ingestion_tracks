@@ -1,0 +1,18 @@
+22/09/20 19:50:48 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+22/09/20 19:50:48 WARN Utils: Service 'SparkUI' could not bind on port 4041. Attempting port 4042.
+df_sample_data = spark.read.csv("C:\\Users\\harsh\\Downloads\\Data_Platform\\Grammer\\testsampledata.csv",header=True)
+df_sample_data.show()
+df_sample_data = df_sample_data.withColumn("Add",df_sample_data.X + df_sample_data.Y + df_sample_data.D)
+df_sample_data = df_sample_data.withColumn("Sub",df_sample_data.X - df_sample_data.Y)
+df_sample_data = df_sample_data.withColumn("Mul",df_sample_data.X * df_sample_data.Y * df_sample_data.D)
+df_sample_data = df_sample_data.withColumn("Div",df_sample_data.X / df_sample_data.Y)
+df_sample_data = df_sample_data.withColumn("Hyb",df_sample_data.X +(df_sample_data.Y *df_sample_data.X ))
+df_sample_data = df_sample_data.withColumn("Lpad",lit(lpad(df_sample_data['A'],10,'x')))
+df_sample_data = df_sample_data.withColumn("Substring",lit(substring(df_sample_data['B'],2,5)))
+df_sample_data = df_sample_data.withColumn("Trim",lit(trim(df_sample_data['C'])))
+df_sample_data = df_sample_data.withColumn("Rtrim",lit(rtrim(df_sample_data['C'])))
+df_sample_data = df_sample_data.withColumn("Ltrim",lit(ltrim(df_sample_data['C'])))
+df_sample_data.show()
+SUCCESS: The process with PID 43268 (child process of PID 47952) has been terminated.
+SUCCESS: The process with PID 47952 (child process of PID 25168) has been terminated.
+SUCCESS: The process with PID 25168 (child process of PID 15304) has been terminated.

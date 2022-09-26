@@ -1,0 +1,52 @@
+
+import os
+import sys
+import time
+from IPython.display import display
+from datetime import datetime
+from pyspark.sql import SparkSession, DataFrame , Row, functions as F, Window
+from pyspark.sql.functions import *
+from pyspark.sql.types import *
+from datetime import datetime
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import *
+from IPython.display import display
+import pyspark
+
+#Create Spark Session 
+appName = "wostatus.py"
+
+def init():
+#{
+    master="local"
+    spark = SparkSession.builder.appName(appName).master(master).getOrCreate()
+#}
+
+def func_code_execution()
+#{
+    s_df_1 = spark.read.csv("C:/CS-PEROSNAL/Translab/Work/Data_Platform/testmetadata.csv",header=True)
+    s_df_1 = s_df_1.select( "A" ,"X" ,"B" ,"Y" ,"D" )
+    s_df_2 = spark.read.parquet("C:/CS-PEROSNAL/Translab/Work/Data_Platform/Platform_data_ingestion_tracks-main/wo_parquet")
+    s_df_1 = s_df_1.withColumn("col_Add",s_df_1.X + s_df_1.Y)
+    s_df_1 = s_df_1.withColumn("col_Sub",s_df_1.X - s_df_1.Y)
+    s_df_1 = s_df_1.withColumn("col_Hyb",s_df_1.X +(s_df_1.Y *s_df_1.X ))
+    s_df_1 = s_df_1.withColumn("col_Substring",substring(s_df_1['B'],2,5))
+    s_df_1 = s_df_1.withColumn("col_Lpad",lpad(s_df_1['A'],10,'x'))
+    s_df_1 = s_df_1.withColumn("col_Trim",trim(s_df_1['A']))
+    s_df_1 = s_df_1.withColumn("col_Rtrim",rtrim(s_df_1['A']))
+    s_df_1 = s_df_1.withColumn("col_Ltrim",ltrim(s_df_1['A']))
+    s_df_1 = s_df_1.withColumn("D",to_timestamp(s_df_1.D,"dd-MM-yyyy HH:mm:ss"))
+    s_df_1 = s_df_1.withColumn("col_DateConversion",lit(to_utc_timestamp(s_df_1['D'],'America/New_York')))
+    s_df_1.count()
+#}
+
+
+if __name__ == '__main__':
+#{
+    now=datetime.now()
+    current_time=now.strftime("%H:%M:%S")
+    print("Start -> Start_time: {} ".format(current_time))
+    init()
+    func_code_execution()
+    print("End -> End_time: {} ".format(current_time))
+#}

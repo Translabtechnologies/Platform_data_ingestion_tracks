@@ -1,0 +1,16 @@
+Start -> Start_time: 14:28:28 
+CODE STARTED
+
+
+DF1=spark.read.csv("C:\CS-PEROSNAL\Translab\Work\Data_Platform\DATA\WOSTATUS.csv",header=True)
+DF1=DF1.filter("STATUS= 'APPR'")
+DF1=DF1.withColumn("CHANGEDATELOCAL",DF1.CHANGEDATE)
+DF1=DF1.withColumn("TARGETMEMO",substring(DF1.MEMO,2,8))
+DF1=DF1.withColumn("FREECOL1",lit(None).cast('String'))
+DF1=DF1.withColumn("FREECOL2",lit(None).cast('String'))
+DF1=DF1.withColumn("FREECOL3",lit(None).cast('String'))
+DF1=DF1.withColumn("AMOUNT",DF1.PARENT + DF1.WONUM)
+DF1=DF1.withColumn("WONUM",DF1.WONUM)
+DF1=DF1.withColumn("ADRMSITEID",DF1.SITEID)
+DF1=DF1.select("CHANGEDATELOCAL","TARGETMEMO","FREECOL1","FREECOL2","FREECOL3","AMOUNT","WONUM","ADRMSITEID")
+DF1.write.mode("overwrite").csv("C:\CS-PEROSNAL\Translab\Work\Data_Platform\DATA\OUTPUT\ADRMWOSTATUS", sep = ",", header = True)

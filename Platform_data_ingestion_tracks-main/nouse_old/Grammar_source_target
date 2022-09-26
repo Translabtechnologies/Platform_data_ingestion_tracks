@@ -1,0 +1,28 @@
+{
+  "source": {
+    "s_df_1": {
+      "sourceType": "csv",
+      "sourcePath": "mnt/mnt-cem/error/bidgely/"
+    },
+    "s_df_2": {
+      "sourceType": "parquet",
+      "sourcePath": "mnt/mnt-cem/error/bidgely/"
+    },
+    "s_df_3": {
+      "sourceType": "MySql",
+      "sourceInfo": ""
+    }
+  },
+  "target": {
+    "t_df_1": {
+      "targetType": "csv",
+      "targetPath": "mnt/mnt-cem/error/bidgely/",
+      "patitionType": "append"
+    },
+    "t_df_2": {
+      "targetType": "parquet",
+      "targetPath": "mnt/mnt-cem/error/bidgely/",
+      "patitionType": "replace"
+    }
+  }
+}
