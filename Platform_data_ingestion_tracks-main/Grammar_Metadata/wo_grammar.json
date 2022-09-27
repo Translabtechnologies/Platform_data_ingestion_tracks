@@ -2,12 +2,12 @@
 	"source": {
 		"s_df_1": {
 			"sourceType": "csv",
-			"sourcePath": "C:/CS-PEROSNAL/Translab/Work/Data_Platform/Platform_data_ingestion_tracks-main/Input_DL_RZ/testmetadata.csv",
-			"sourceschema" : " \"A\" ,\"X\" ,\"B\" ,\"Y\" ,\"D\" "
+			"sourcePath": "C:/Platform_data_ingestion_tracks-main/Input_DL_RZ/testmetadata.csv",
+			"sourceschema" : " \"A\" ,\"X\" ,\"B\" ,\"Y\" ,\"D\" ,\"E\",\"H\",\"G\" ,\"I\" "
 		},
 		"s_df_2": {
 			"sourceType": "parquet",
-			"sourcePath": "C:/CS-PEROSNAL/Translab/Work/Data_Platform/Platform_data_ingestion_tracks-main/Input_DL_RZ/wo_parquet",
+			"sourcePath": "C:/Platform_data_ingestion_tracks-main/Input_DL_RZ/wo_parquet",
 			"sourceschema" : ""
 		},
 		"s_df_3": {
@@ -19,8 +19,8 @@
 	"target": {
 		"t_df_1": {
 			"targetType": "parquet",
-			"targetPath": "C:/CS-PEROSNAL/Translab/Work/Data_Platform/Platform_data_ingestion_tracks-main/Output_DL_SZ/DL_WO",
-			"targetschema" : " \"A\" ,\"X\" ,\"B\" ,\"Y\" ,\"D\" ,\"Y\" ,\"col_Add\" ,\"col_Sub\" ,\"col_Hyb\" ,\"col_Substring\" ,\"col_Lpad\" ,\"col_Trim\" , \"col_Rtrim\" ,\"col_DateConversion\" ",
+			"targetPath": "C:/Platform_data_ingestion_tracks-main/Output_DL_SZ/DL_WO",
+			"targetschema" : " \"A\" ,\"X\" ,\"B\" ,\"Y\" ,\"D\" ,\"G\",\"I\" ,\"col_Add\" ,\"col_Sub\" ,\"col_Hyb\" ,\"col_Substring\" ,\"col_Lpad\" ,\"col_Trim\" , \"col_Rtrim\" ,\"col_DateConversion\" ,\"E_Renamed\",\"H_Renamed\" ,\"col_Constantcopy\" ",
 			"sourceDF" : "s_df_1",
 			"partition": {
 			"strategy": "append/replace",
@@ -130,6 +130,46 @@
 				"target_timeformat":"dd-MM-yyyy HH:mm:ss"
 			}
 			
+    },
+	{
+            "dataframe" : "s_df_1",
+            "source_column" : "E",
+            "target_column" : "E_Renamed",
+            "transformation_operation" : "rename"
+    },
+	{
+            "dataframe" : "s_df_1",
+            "source_column" : "H",
+            "target_column" : "H_Renamed",
+            "transformation_operation" : "rename"
+    },
+	{
+			"dataframe" : "s_df_1",
+            "source_column" : "",
+            "target_column" : "col_Constantcopy",
+            "transformation_operation" : "constantcopy",
+            "value" : "maximo",
+            "value_type" : "c",
+            "datatype" : "string"
+	},
+	{
+            "dataframe" : "s_df_1",
+            "source_column" : ["G"],
+            "value"    : 20,
+            "transformation_operation" : "filter",
+            "filter_type"    : "",
+            "transformation_operator"  : ">",
+            "expression" : ""
+    },
+	{
+            "dataframe" : "s_df_1",
+            "source_column" : ["G","I"],
+            "value"    : "None",
+            "transformation_operation" : "filter",
+            "filter_type"    : "hybrid",
+            "transformation_operator"  : "",
+            "expression" : "(G>20) & (I=='happy')"
     }
+
   ]
 }
