@@ -1,5 +1,6 @@
 import json
 import pandas as pd
+import re 
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -77,11 +78,8 @@ def func_transformation(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name,v_ctrl_Notebook_
             output = output[:-3]
             return df + ' = '+ df + '.withColumn("' + target + '",' +output+ ')'
         elif op == 'hybrid':
-            for i in exp:
-                if i in source:
-                    output = output + df + "." + i + " "
-                else:
-                    output = output + i
+            output = re.sub(r"col\[" , df + "." , exp)
+            output = re.sub(r"\]" , "", output)
             return df + ' = '+ df + '.withColumn("' + target + '",' +output+ ')'
         else:
             return "Throw Arithmetic Exception"
@@ -137,14 +135,10 @@ def func_transformation(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name,v_ctrl_Notebook_
     #{
         output=""
         if ftype == '':
-            return df + ' = ' + df + '.filter("' + str(source[0]) + str(op) + str(val) + '")'
+            return df + ' = ' + df + '.filter("' + str(source) + str(op) + str(val) + '")'
         elif ftype == 'hybrid':
-            for i in exp:
-                if i in source:
-                    output = output + df + "." + i + " "
-                else:
-                    output = output + i
-            #print(output)
+            output = re.sub(r"col\[" , df + "." , exp)
+            output = re.sub(r"\]" , "", output)
             return df + ' = ' + df + '.filter(' + output + ')'  
         else:
         #{
