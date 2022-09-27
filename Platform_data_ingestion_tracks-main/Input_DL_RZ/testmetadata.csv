@@ -1,11 +1,11 @@
-A,X,Y,B,C,D
-quia,490632,9,Prof. Corene Schiller,harshitaa       ,25-09-2022 23:17:02
-velit,21,3,Dr. Magdalena Jenkins,vikash      ,25-09-2022 04:17:02
-a,1872,0,Dimitri Eichmann,   pulkit     ,25-09-2022 16:24:02
-maiores,68341071,1,Dr. Phyllis Hane Jr.,       chetan     ,25-09-2022 23:17:02
-adipisci,76757,5,Mose Armstrong,     dhaval     ,25-09-2022 23:17:02
-eligendi,77038,4,Emanuel Mayer,        kartik     ,25-09-2022 23:17:02
-ipsam,2542,4,Dr. Hadley Fahey Jr.,   anuj      ,25-09-2022 23:17:02
-et,14584372,6,Miss Tiana Berge,     aryan     ,25-09-2022 23:17:02
-soluta,7481,4,Dr. Andreane Gottlieb,        vanshav       ,25-09-2022 23:17:02
-voluptas,1,4,Zachery Weimann,    risha                ,25-09-2022 23:17:02
+A,X,Y,B,C,D,E,H,G,I
+quia,490632,9,Prof. Corene Schiller,harshitaa       ,25-09-2022 23:17:02,12,apple,30,happy
+velit,21,3,Dr. Magdalena Jenkins,vikash      ,25-09-2022 04:17:02,13,banana,40,sad
+a,1872,0,Dimitri Eichmann,   pulkit     ,25-09-2022 16:24:02,14,mango,20,happy
+maiores,68341071,1,Dr. Phyllis Hane Jr.,       chetan     ,25-09-2022 23:17:02,15,cherry,20,happy
+adipisci,76757,5,Mose Armstrong,     dhaval     ,25-09-2022 23:17:02,16,pineapple,20,sad
+eligendi,77038,4,Emanuel Mayer,        kartik     ,25-09-2022 23:17:02,17,litchi,20,sad
+ipsam,2542,4,Dr. Hadley Fahey Jr.,   anuj      ,25-09-2022 23:17:02,18,papaya,50,happy
+et,14584372,6,Miss Tiana Berge,     aryan     ,25-09-2022 23:17:02,19,watermelon,60,sad
+soluta,7481,4,Dr. Andreane Gottlieb,        vanshav       ,25-09-2022 23:17:02,20,peach,70,happy
+voluptas,1,4,Zachery Weimann,    risha                ,25-09-2022 23:17:02,21,pear,25,happy
