@@ -64,7 +64,7 @@
 			"target_column": "col_Hyb",
 			"transformation_operation": "arithmetic",
 			"transformation_operator": "hybrid",
-			"expression": "X+(Y*X)"
+			"expression": "col[X]+(col[Y]*col[X])"
     },
     {
 			"dataframe" : "s_df_1",
@@ -154,7 +154,7 @@
 	},
 	{
             "dataframe" : "s_df_1",
-            "source_column" : ["G"],
+            "source_column" : "G",
             "value"    : 20,
             "transformation_operation" : "filter",
             "filter_type"    : "",
@@ -163,12 +163,12 @@
     },
 	{
             "dataframe" : "s_df_1",
-            "source_column" : ["G","I"],
+            "source_column" : "",
             "value"    : "None",
             "transformation_operation" : "filter",
             "filter_type"    : "hybrid",
             "transformation_operator"  : "",
-            "expression" : "(G>20) & (I=='happy')"
+            "expression" : "(col[G]>20) & (col[I]=='I')"
     }
 
   ]
