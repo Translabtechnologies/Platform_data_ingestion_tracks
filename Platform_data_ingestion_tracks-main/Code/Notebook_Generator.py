@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 import re 
+from IPython.display import display
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -151,6 +152,9 @@ def func_transformation(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name,v_ctrl_Notebook_
     with open(Path) as json_file:
         data = json.load(json_file)
     df_transformation = pd.DataFrame.from_dict(data['transformation'])
+    #display(df_transformation)
+    df_transformation = df_transformation.sort_values(by=['transformation_order'])
+    #display(df_transformation)
     
     for index, row in df_transformation.iterrows():
     #{
