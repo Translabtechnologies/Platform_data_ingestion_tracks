@@ -2,12 +2,12 @@
 	"source": {
 		"s_df_1": {
 			"sourceType": "csv",
-			"sourcePath": "C:/CS-PEROSNAL/Translab/Work/Data_Platform/Platform_data_ingestion_tracks-main/Input_DL_RZ/testmetadata.csv",
-			"sourceschema" : " \"A\" ,\"X\" ,\"B\" ,\"Y\" ,\"D\" "
+			"sourcePath": "C:/Platform_data_ingestion_tracks-main/Input_DL_RZ/testmetadata.csv",
+			"sourceschema" : " \"A\" ,\"X\" ,\"B\" ,\"Y\" ,\"D\" ,\"E\",\"H\",\"G\" ,\"I\" "
 		},
 		"s_df_2": {
 			"sourceType": "parquet",
-			"sourcePath": "C:/CS-PEROSNAL/Translab/Work/Data_Platform/Platform_data_ingestion_tracks-main/Input_DL_RZ/wo_parquet",
+			"sourcePath": "C:/Platform_data_ingestion_tracks-main/Input_DL_RZ/wo_parquet",
 			"sourceschema" : ""
 		},
 		"s_df_3": {
@@ -19,8 +19,8 @@
 	"target": {
 		"t_df_1": {
 			"targetType": "parquet",
-			"targetPath": "C:/CS-PEROSNAL/Translab/Work/Data_Platform/Platform_data_ingestion_tracks-main/Output_DL_SZ/DL_WOSTATUS",
-			"targetschema" : " \"A\" ,\"X\" ,\"B\" ,\"Y\" ,\"D\" ,\"Y\" ,\"col_Add\" ,\"col_Sub\" ,\"col_Hyb\" ,\"col_Substring\" ,\"col_Lpad\" ,\"col_Trim\" , \"col_Rtrim\" ,\"col_DateConversion\" ",
+			"targetPath": "C:/Platform_data_ingestion_tracks-main/Output_DL_SZ/DL_WOSTATUS",
+			"targetschema" : " \"A\" ,\"X\" ,\"B\" ,\"Y\" ,\"D\" ,\"G\",\"I\" ,\"col_Add\" ,\"col_Sub\" ,\"col_Hyb\" ,\"col_Substring\" ,\"col_Lpad\" ,\"col_Trim\" , \"col_Rtrim\" ,\"col_DateConversion\" ,\"E_Renamed\",\"H_Renamed\" ,\"col_Constantcopy\" ",
 			"sourceDF" : "s_df_1",
 			"partition": {
 			"strategy": "append/replace",
@@ -48,7 +48,8 @@
 			"target_column": "col_Add",
 			"transformation_operation": "arithmetic",
 			"transformation_operator": "addition",
-			"expression": "None"
+			"expression": "None",
+			"transformation_order":12
     },
     {
 			"dataframe" : "s_df_1",
@@ -56,7 +57,8 @@
 			"target_column": "col_Sub",
 			"transformation_operation": "arithmetic",
 			"transformation_operator": "subtraction",
-			"expression": "None"
+			"expression": "None",
+			"transformation_order":11
     },
     {
 			"dataframe" : "s_df_1",
@@ -64,7 +66,8 @@
 			"target_column": "col_Hyb",
 			"transformation_operation": "arithmetic",
 			"transformation_operator": "hybrid",
-			"expression": "X+(Y*X)"
+			"expression": "col[X]+(col[Y]*col[X])",
+			"transformation_order":11
     },
     {
 			"dataframe" : "s_df_1",
@@ -76,7 +79,8 @@
 			"params": {
 				"start_position": "2",
 				"no_of_character": "5"
-			}
+			},
+			"transformation_order":11
     },
 	{
 			"dataframe" : "s_df_1",
@@ -89,15 +93,17 @@
 			{
 				"max_length":"10",
 				"padding_character":"x"
-			}
-    },
+			},
+			"transformation_order":10
+	},
     {
 			"dataframe" : "s_df_1",
 			"source_column": ["A"],
 			"target_column": "col_Trim",
 			"transformation_operation": "string",
 			"transformation_operator": "trim",
-			"expression": "None"
+			"expression": "None",
+			"transformation_order":9
     },
     {
 			"dataframe" : "s_df_1",
@@ -105,7 +111,8 @@
 			"target_column": "col_Rtrim",
 			"transformation_operation": "string",
 			"transformation_operator": "rtrim",
-			"expression": "None"
+			"expression": "None",
+			"transformation_order":8
     },
     {
 			"dataframe" : "s_df_1",
@@ -113,7 +120,8 @@
 			"target_column": "col_Ltrim",
 			"transformation_operation": "string",
 			"transformation_operator": "ltrim",
-			"expression": "None"
+			"expression": "None",
+			"transformation_order":7
     },
     {
 			"dataframe" : "s_df_1",
@@ -126,10 +134,56 @@
 			{
 				"source_timezone":"America/New_York",
 				"source_timeformat":"dd-MM-yyyy HH:mm:ss",
-				"target_timeformat":"to_utc_timestamp",
+				"target_timezone":"to_utc_timestamp",
 				"target_timeformat":"dd-MM-yyyy HH:mm:ss"
-			}
+			},
+			"transformation_order":6
 			
+    },
+	{
+            "dataframe" : "s_df_1",
+            "source_column" : "E",
+            "target_column" : "E_Renamed",
+            "transformation_operation" : "rename",
+	    "transformation_order":5
+    },
+	{
+            "dataframe" : "s_df_1",
+            "source_column" : "H",
+            "target_column" : "H_Renamed",
+            "transformation_operation" : "rename",
+	    "transformation_order":4
+    },
+	{
+	    "dataframe" : "s_df_1",
+            "source_column" : "",
+            "target_column" : "col_Constantcopy",
+            "transformation_operation" : "constantcopy",
+            "value" : "maximo",
+            "value_type" : "c",
+            "datatype" : "string",
+	    "transformation_order":3
+	},
+	{
+            "dataframe" : "s_df_1",
+            "source_column" : "G",
+            "value"    : 20,
+            "transformation_operation" : "filter",
+            "filter_type"    : "",
+            "transformation_operator"  : ">",
+            "expression" : "",
+	    "transformation_order":2
+    },
+	{
+            "dataframe" : "s_df_1",
+            "source_column" : "",
+            "value"    : "None",
+            "transformation_operation" : "filter",
+            "filter_type"    : "hybrid",
+            "transformation_operator"  : "",
+            "expression" : "(col[G]>20) & (col[I]=='I')",
+	    "transformation_order":1
     }
+
   ]
 }
