@@ -1,0 +1,7 @@
+Emp_id,Name,Year_Joined,Emp_dept_id,Gender,Salary
+1,Smith,2019,10,M,3000
+2,Rose,2010,20,M,4000
+3,Williams,2010,10,M,1000
+4,Jones,2005,10,F,2000
+5,Brown,2018,40,,-1
+6,Brown,2018,50,,-1
