@@ -3,7 +3,7 @@
 		"s_df_1": {
 			"sourceType": "csv",
 			"sourcePath": "C:/Platform_data_ingestion_tracks-main/Input_DL_RZ/testmetadata.csv",
-			"sourceschema" : " \"A\" ,\"X\" ,\"B\" ,\"Y\" ,\"D\" ,\"E\",\"H\",\"G\" ,\"I\" "
+			"sourceschema" : " \"A\" ,\"X\" ,\"B\" ,\"Y\" ,\"D\" ,\"E\",\"H\",\"G\" ,\"I\" "        
 		},
 		"s_df_2": {
 			"sourceType": "parquet",
@@ -14,6 +14,16 @@
 			"sourceType": "Mysql",
 			"sourceInfo": "",
 			"sourceschema" : ""
+		},
+		"s_df_4": {
+			"sourceType":"csv",
+			"sourcePath":"C:/Platform_data_ingestion_tracks-main/Input_DL_RZ/LeftTable.csv",
+			"sourceschema": " \"Emp_id\",\"Name\",\"Year_Joined\",\"Emp_dept_id\",\"Gender\",\"Salary\" "
+		},
+		"s_df_5": {
+			"sourceType":"csv",
+			"sourcePath":"C:/Platform_data_ingestion_tracks-main/Input_DL_RZ/RightTable.csv",
+			"sourceschema": " \"Dept_Name\",\"Dept_Id\", \"Salary\" "
 		}
 	},
 	"target": {
@@ -145,24 +155,24 @@
             "source_column" : "E",
             "target_column" : "E_Renamed",
             "transformation_operation" : "rename",
-	    "transformation_order":5
+			"transformation_order":5
     },
 	{
             "dataframe" : "s_df_1",
             "source_column" : "H",
             "target_column" : "H_Renamed",
             "transformation_operation" : "rename",
-	    "transformation_order":4
+			"transformation_order":4
     },
 	{
-	    "dataframe" : "s_df_1",
+			"dataframe" : "s_df_1",
             "source_column" : "",
             "target_column" : "col_Constantcopy",
             "transformation_operation" : "constantcopy",
             "value" : "maximo",
             "value_type" : "c",
             "datatype" : "string",
-	    "transformation_order":3
+			"transformation_order":3
 	},
 	{
             "dataframe" : "s_df_1",
@@ -172,7 +182,7 @@
             "filter_type"    : "",
             "transformation_operator"  : ">",
             "expression" : "",
-	    "transformation_order":2
+			"transformation_order":2
     },
 	{
             "dataframe" : "s_df_1",
@@ -182,8 +192,22 @@
             "filter_type"    : "hybrid",
             "transformation_operator"  : "",
             "expression" : "(col[G]>20) & (col[I]=='I')",
-	    "transformation_order":1
-    }
+			"transformation_order":1
+    },
+	{
+			"left_dataframe" : "s_df_4",
+			"right_dataframe" : "s_df_5",
+			"resultant_dataframe" : "s_df_4",
+			"transformation_operation" : "join",
+			"join_type" : "left",
+			"join_condition" : "(s_df_4.Emp_dept_id == s_df_5.Dept_Id) & (s_df_4.Salary == s_df_5.Salary)"
+	},
+	{
+			"dataframe" : "s_df_5",
+			"list_of_columns" : ["Dept_Name","Dept_Id"],
+			"transformation_operation" : "restrictcolumns",
+			"transformation_operator" : "drop"
+	}
 
   ]
 }
