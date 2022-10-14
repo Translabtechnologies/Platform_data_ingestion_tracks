@@ -86,7 +86,6 @@ def func_transformation(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name,v_ctrl_Notebook_
             return "Throw Arithmetic Exception"
       #}
 
-
     def func_t_string(source,params,op,df,target):
     #{
         if op == 'lpad':
@@ -146,7 +145,47 @@ def func_transformation(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name,v_ctrl_Notebook_
             return "Throw filter exception"
         #}
     #}
+    
 
+    def func_t_restrictcolumns(df,listofcolumns,op):
+    #{
+        output=""
+        if op == 'select':
+            for i in listofcolumns:
+                output = output + df + "."  + i + " , "
+            output = output[:-3]
+            return df + ' = '+ df + '.select(' + output + ')'
+        elif op == 'drop':
+            #return df + '=' + df + ".drop(*" + listofcolumns + ")"
+            for i in listofcolumns:
+                output = output + ".drop(" + df + "."  + i + ")"
+            #output = output[:-3]
+            return df + ' = '+ df + output 
+        else:
+            return "Throw Restrict Columns Exception"
+    #}
+ #empDF.join(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"inner").show(truncate=False)  
+     
+    def func_t_joins(jtype,ldf,rdf,condition,resultdf):
+    #{
+        if jtype == 'inner':
+            return resultdf + ' = ' + ldf + '.join(' + rdf + ',' + str(condition) + ',"' + str(jtype) + '")'
+        elif jtype == 'outer':
+            return resultdf + ' = ' + ldf + '.join(' + rdf + ',' + str(condition) + ',"' + str(jtype) + '")'
+        elif jtype == 'left':
+            return resultdf + ' = ' + ldf + '.join(' + rdf + ',' + str(condition) + ',"' + str(jtype) + '")'
+        elif jtype == 'right':
+            return resultdf + ' = ' + ldf + '.join(' + rdf + ',' + str(condition) + ',"' + str(jtype) + '")'
+        elif jtype == 'leftsemi':
+            return resultdf + ' = ' + ldf + '.join(' + rdf + ',' + str(condition) + ',"' + str(jtype) + '")'
+        elif jtype == 'leftanti':
+            return resultdf + ' = ' + ldf + '.join(' + rdf + ',' + str(condition) + ',"' + str(jtype) + '")'
+        else:
+            return "Throw join exception"
+    #}
+    
+    
+   
     Path = v_ctrl_Grammar_Path + '\\' + v_ctrl_Grammar_Name
     
     with open(Path) as json_file:
@@ -169,11 +208,18 @@ def func_transformation(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name,v_ctrl_Notebook_
         v_gm_value_type = row["value_type"]
         v_gm_datatype = row["datatype"]
         v_gm_filter_type = row["filter_type"]
-        
+        v_gm_list_of_columns = row["list_of_columns"]
+        v_gm_left_dataframe = row["left_dataframe"]
+        v_gm_right_dataframe = row["right_dataframe"]
+        v_gm_join_type = row["join_type"]
+        v_gm_join_condition = row["join_condition"]
+        v_gm_resultant_dataframe = row["resultant_dataframe"]
         #print(v_gm_dataframe, v_gm_source_column_lst , v_gm_target_column , v_gm_transformation_operation , v_gm_transformation_operator , v_gm_expression , v_gm_param)
-       
+        #print(v_gm_left_dataframe,v_gm_right_dataframe,v_gm_resultant_dataframe)
+        
         if row['transformation_operation'] == 'arithmetic':
             executable_code = func_t_arithmetic(v_gm_expression,v_gm_source_column_lst,v_gm_transformation_operator,v_gm_dataframe,v_gm_target_column)
+            #print(executable_code)
             outF.write('\t' + executable_code + '\n')
         elif row['transformation_operation'] == 'string':
             executable_code = func_t_string(row["source_column"][0],v_gm_param,v_gm_transformation_operator,v_gm_dataframe,v_gm_target_column)
@@ -192,6 +238,13 @@ def func_transformation(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name,v_ctrl_Notebook_
         elif row['transformation_operation'] == 'filter':
             executable_code = func_t_filter(v_gm_dataframe,v_gm_source_column_lst,v_gm_value,v_gm_transformation_operator,v_gm_expression,v_gm_filter_type)
             outF.write('\t' + executable_code + '\n')
+        elif row['transformation_operation'] == 'restrictcolumns':
+            executable_code =  func_t_restrictcolumns(v_gm_dataframe,v_gm_list_of_columns,v_gm_transformation_operator)
+            outF.write('\t' + executable_code + '\n')
+        elif row['transformation_operation'] == 'join':
+            executable_code = func_t_joins(v_gm_join_type,v_gm_left_dataframe,v_gm_right_dataframe,v_gm_join_condition,v_gm_resultant_dataframe)
+            outF.write('\t'+ executable_code + '\n')
+            
     #}
 #}
 
@@ -327,7 +380,9 @@ def func_config_read(v_config_path):
             func_notebook_header(v_ctrl_Notebook_Path,v_ctrl_Notebook_Name)
             func_source(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name,v_ctrl_Notebook_Name , v_ctrl_Notebook_Path)
             func_transformation(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name,v_ctrl_Notebook_Name , v_ctrl_Notebook_Path)
-            outF.write('\t'+ "s_df_1.show()" + '\n')
+            #outF.write('\t'+ "s_df_1.show()" + '\n')
+            #outF.write('\t'+ "s_df_4.show()" + '\n')
+            #outF.write('\t'+ "s_df_5.show()" + '\n')
             func_target(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name)
             func_notebook_footer()
             #outF.close()
