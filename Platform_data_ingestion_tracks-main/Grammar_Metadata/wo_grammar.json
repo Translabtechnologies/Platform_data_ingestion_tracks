@@ -3,7 +3,7 @@
 		"s_df_1": {
 			"sourceType": "csv",
 			"sourcePath": "C:/Platform_data_ingestion_tracks-main/Input_DL_RZ/testmetadata.csv",
-			"sourceschema" : " \"A\" ,\"X\" ,\"B\" ,\"Y\" ,\"D\" ,\"E\",\"H\",\"G\" ,\"I\" "        
+			"sourceschema": [ "A" ,"X" ,"B" ,"Y" ,"D" ,"E","H","G" ,"I" ]       
 		},
 		"s_df_2": {
 			"sourceType": "parquet",
@@ -18,25 +18,33 @@
 		"s_df_4": {
 			"sourceType":"csv",
 			"sourcePath":"C:/Platform_data_ingestion_tracks-main/Input_DL_RZ/LeftTable.csv",
-			"sourceschema": " \"Emp_id\",\"Name\",\"Year_Joined\",\"Emp_dept_id\",\"Gender\",\"Salary\" "
+			"sourceschema": [ "Emp_id","Name","Year_Joined","Emp_dept_id","Gender","Salary" ]
 		},
 		"s_df_5": {
 			"sourceType":"csv",
 			"sourcePath":"C:/Platform_data_ingestion_tracks-main/Input_DL_RZ/RightTable.csv",
-			"sourceschema": " \"Dept_Name\",\"Dept_Id\", \"Salary\" "
+			"sourceschema": [ "Dept_Name","Dept_Id", "Salary" ]
 		}
 	},
 	"target": {
 		"t_df_1": {
 			"targetType": "parquet",
 			"targetPath": "C:/Platform_data_ingestion_tracks-main/Output_DL_SZ/DL_WO",
-			"targetschema" : " \"A\" ,\"X\" ,\"B\" ,\"Y\" ,\"D\" ,\"G\",\"I\" ,\"col_Add\" ,\"col_Sub\" ,\"col_Hyb\" ,\"col_Substring\" ,\"col_Lpad\" ,\"col_Trim\" , \"col_Rtrim\" ,\"col_DateConversion\" ,\"E_Renamed\",\"H_Renamed\" ,\"col_Constantcopy\" ",
+			"targetschema": [ "A" ,"X" ,"B" ,"Y" ,"D" ,"G","I" ,"col_Add" ,"col_Sub" ,"col_Hyb" ,"col_Substring" ,"col_Lpad" ,"col_Trim" , "col_Rtrim" ,"col_DateConversion" ,"E_Renamed","H_Renamed" ,"col_Constantcopy","is_active", "changedate" ],
 			"sourceDF" : "s_df_1",
 			"partition": {
-			"strategy": "append/replace",
-			"type": "hash/record",
-			"hashColumn": "X",
-			"recNum": 1000000
+				"columns" : ["State","City"],
+				"type": "hash/record",
+				"hashColumn": "X",
+				"recNum": 1000000
+			},
+			"loadParams":{
+				"loadType":"DELTA/FULL/SCD1/SCD2",
+				"targetPk" : ["customer_bkey"],
+				"surrogateKey" : "sur_customer_bkey",
+				"changeType":"condition/checksum",
+				"checksumColumns" : ["A","col_Add"],
+				"changeCondition": "is_active == 'Y'/ changedate = $$MAXIMO_BUSINESS_DATE$$ "
 			}
 		},
 		"t_df_2": {
@@ -45,10 +53,17 @@
 			"targetschema" : "",
 			"sourceDF" : "s_df_2",
 			"partition": {
-			"strategy": "append/replace",
-			"type": "hash/record",
-			"hashColumn": "X",
-			"recNum": 1000000
+				"type": "hash/record",
+				"hashColumn": "X",
+				"recNum": 1000000
+			},
+			"loadParams":{
+				"loadType":"DELTA/FULL/SCD1/SCD2",
+				"targetPk" : ["customer_bkey"],
+				"surrogateKey" : "sur_customer_bkey",
+				"changeType":"condition/checksum",
+				"checksumColumns" : ["A","col_Add"],
+				"changeCondition": "is_active == 'Y'/ changedate = $$MAXIMO_BUSINESS_DATE$$ "
 			}	
 		}
 	},
