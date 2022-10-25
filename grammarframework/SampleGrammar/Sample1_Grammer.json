@@ -1,0 +1,169 @@
+{
+	"source": {
+		"s_df_1": {
+			"sourceType": "parquet",
+			"sourcePath": "C:/Users/DELL/Downloads/grammarframework/input/Sample1.parquet",
+			"sourceschema" : ["Id" ,"State" , "City" ,"A" ,"B" ,"C","D"]        
+
+		}
+	},
+	"target": {
+		"t_df_1": {
+			"targetType": "parquet",
+			"targetPath": "C:/Users/DELL/Downloads/grammarframework/output",
+			"targetschema" : ["Id" ,"State" ,"City","A" ,"B" ,"C" ,"D" ,"col_Add" ,"col_Sub" ,"col_Complex" ,"col_Substring" ,"col_Lpad" ,"col_Trim" , "col_Rtrim","col_DateConversion","col_Constantcopy","col_State","col_City"] ,
+			"sourceDF" : "s_df_1",
+			"partition": {
+			"columns" : ["State","City"],
+			"strategy": "append/replace",
+			"type": "hash/record",
+			"hashColumn": "X",
+			"recNum": 1000000
+			}
+		}
+	},
+	"transformation": [{
+			"dataframe" : "s_df_1",
+			"source_column": ["A","B"],
+			"target_column": "col_Add",
+			"transformation_operation": "arithmetic",
+			"transformation_operator": "addition",
+			"expression": "None",
+			"transformation_order":12
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["A","B"],
+			"target_column": "col_Sub",
+			"transformation_operation": "arithmetic",
+			"transformation_operator": "subtraction",
+			"expression": "None",
+			"transformation_order":11
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["A","B"],
+			"target_column": "col_Complex",
+			"transformation_operation": "arithmetic",
+			"transformation_operator": "Complex",
+			"expression": "col[A]+(col[B]*col[A])",
+			"transformation_order":11
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["C"],
+			"target_column": "col_Substring",
+			"transformation_operation": "string",
+			"transformation_operator": "substr",
+			"expression": "None",
+			"params": {
+				"start_position": "2",
+				"no_of_character": "5"
+			},
+			"transformation_order":11
+    },
+	{
+			"dataframe" : "s_df_1",
+			"source_column": ["C"],
+			"target_column": "col_Lpad",
+			"transformation_operation": "string",
+			"transformation_operator": "lpad",
+			"expression": "None",
+			"params":
+			{
+				"max_length":"10",
+				"padding_character":"x"
+			},
+			"transformation_order":10
+	},
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["C"],
+			"target_column": "col_Trim",
+			"transformation_operation": "string",
+			"transformation_operator": "trim",
+			"expression": "None",
+			"transformation_order":9
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["C"],
+			"target_column": "col_Rtrim",
+			"transformation_operation": "string",
+			"transformation_operator": "rtrim",
+			"expression": "None",
+			"transformation_order":8
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["C"],
+			"target_column": "col_Ltrim",
+			"transformation_operation": "string",
+			"transformation_operator": "ltrim",
+			"expression": "None",
+			"transformation_order":7
+    },
+    {
+			"dataframe" : "s_df_1",
+			"source_column": ["D"],
+			"target_column": "col_DateConversion",
+			"transformation_operation": "date",
+			"transformation_operator": "UTC",
+			"expression": "None",
+			"params":
+			{
+				"source_timezone":"America/New_York",
+				"source_timeformat":"dd-MM-yyyy HH:mm:ss",
+				"target_timezone":"to_utc_timestamp",
+				"target_timeformat":"dd-MM-yyyy HH:mm:ss"
+			},
+			"transformation_order":6
+			
+    },
+	{
+			"dataframe" : "s_df_1",
+            "source_column" : "",
+            "target_column" : "col_Constantcopy",
+            "transformation_operation" : "constantcopy",
+            "value" : "maximo",
+            "value_type" : "c",
+            "datatype" : "string",
+			"transformation_order":3
+	},
+	{
+            "dataframe" : "s_df_8",
+            "source_column" : "G",
+            "value"    : 20,
+            "transformation_operation" : "filter",
+            "filter_type"    : "",
+            "transformation_operator"  : ">",
+            "expression" : "",
+			"transformation_order":2
+    },
+	{
+            "dataframe" : "s_df_6",
+            "source_column" : "",
+            "value"    : "None",
+            "transformation_operation" : "filter",
+            "filter_type"    : "hybrid",
+            "transformation_operator"  : "",
+            "expression" : "(col[G]>20) & (col[I]=='I')",
+			"transformation_order":1
+    },
+	{
+			"left_dataframe" : "s_df_4",
+			"right_dataframe" : "s_df_5",
+			"resultant_dataframe" : "s_df_4",
+			"transformation_operation" : "join",
+			"join_type" : "left",
+			"join_condition" : "(s_df_4.Emp_dept_id == s_df_5.Dept_Id) & (s_df_4.Salary == s_df_5.Salary)"
+	},
+	{
+			"dataframe" : "s_df_5",
+			"list_of_columns" : ["Dept_Name","Dept_Id"],
+			"transformation_operation" : "restrictcolumns",
+			"transformation_operator" : "drop"
+	}
+
+  ]
+}
