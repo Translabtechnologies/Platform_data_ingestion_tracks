@@ -2,6 +2,8 @@ import json
 import pandas as pd
 import re 
 from IPython.display import display
+from datetime import date
+import datetime
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -11,18 +13,33 @@ pd.set_option('display.width', None)
 def func_source(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name,v_ctrl_Notebook_Name , v_ctrl_Notebook_Path):
 #{
     global outF
+    global Logs
+    
     v_grammar_Path = v_ctrl_Grammar_Path + '\\' + v_ctrl_Grammar_Name
     with open(v_grammar_Path) as json_file:
         data = json.load(json_file)
+        
+        
+    Logs.write(str(datetime.datetime.now())+'\tGrammerFileFetchedSuccessfully\t'+v_grammar_Path+'\n')    
+        
+        
     df_source = pd.DataFrame.from_dict(data['source'])
+    
+    
+    
     for i in df_source.columns:
     #{
+    
+        Logs.write(str(datetime.datetime.now())+'\tSourceFormatDetected\t'+df_source[i]["sourceType"]+'\n')  
+        
+        
         executable_code=""
         if df_source[i]["sourceType"] == "csv":
         #{
             executable_code=i+' = spark.read.csv("' + df_source[i]["sourcePath"] + '",header=True)'
             #print(executable_code);
             outF.write('\t' + executable_code + '\n')
+            
         #}
         elif df_source[i]["sourceType"] == "parquet":
         #{
@@ -37,7 +54,8 @@ def func_source(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name,v_ctrl_Notebook_Name , v
             outF.write('\t' + executable_code + '\n')
         #}
          
-         
+        
+        Logs.write(str(datetime.datetime.now())+'\tSourceFileReadCodeGenerated\t'+df_source[i]["sourcePath"]+'\n')
         
          
         if len(df_source[i]["sourceschema"]) != 0:
@@ -56,35 +74,59 @@ def func_transformation(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name,v_ctrl_Notebook_
     global outF
     
     
+    
+    Logs.write(str(datetime.datetime.now())+'\tTransformationCodeGenerationInitiated\t'+v_ctrl_Notebook_Name[0:-3]+'\n')
+    
     def func_t_arithmetic(exp,source,op,df,target):
     #{
         output=""
+        
         if op == 'addition':
+        
+            
+        
             for i in source:
                 output = output + df + "."  + i + " + "
             output = output[:-3]
             return df + ' = '+ df + '.withColumn("' + target + '",' +output+ ')'
+            
+            
         elif op == 'subtraction':
+        
+            
+        
             for i in source:
                 output = output + df + "."  + i + " - "
             output = output[:-3]
             return df + ' = '+ df + '.withColumn("' + target + '",' +output+ ')'
+            
         elif op == 'multiplication':
+        
+            
+        
             for i in source:
                 output = output + df + "."  + i + " * "
             output = output[:-3]
             return df + ' = '+ df + '.withColumn("' + target + '",' +output+ ')'
+            
         elif op == 'division':
+        
+            
+        
             for i in source:
                 output = output + df +"."  + i + " / "
             output = output[:-3]
             return df + ' = '+ df + '.withColumn("' + target + '",' +output+ ')'
+            
         elif op == 'Complex':
+        
+           
+        
             output = re.sub(r"col\[" , df + "." , exp)
             output = re.sub(r"\]" , "", output)
             return df + ' = '+ df + '.withColumn("' + target + '",' +output+ ')'
         else:
-            return "Throw Arithmetic Exception"
+            return "Unknown Arithmetic Operation Detected!!!!!!!!!"
       #}
 
     def func_t_string(source,params,op,df,target):
@@ -110,9 +152,17 @@ def func_transformation(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name,v_ctrl_Notebook_
 
 
     def func_t_date(source,df,params,target):
-    #{
-        output = params["target_timezone"] + "(" + df + "['" + source + "'],'" + params["source_timezone"] + "')"
-        return df + ' = '+ df + '.withColumn("' + target + '",lit(' + output + '))'
+    #{  
+        #output = "to_utc_timestamp(" + df + "['" + source + "'],'" + params["source_timezone"] + "')"
+        
+        output = df + ' = '+ df + '.withColumn("' + target + '",lit(' + "to_utc_timestamp(" + df + "['" + source + "'],'" + params["source_timezone"] + "')" + '))'
+        
+        if params['target_timezone'] != 'UTC':
+        
+            output = output + '\n\t' + df + ' = '+ df + '.withColumn("' + target + '",lit(' + "from_utc_timestamp(" + df + "['" + source + "'],'" + params["target_timezone"] + "')" + '))'
+        
+        
+        return output
     #}
     
     def func_t_rename(df,source,target):
@@ -246,11 +296,13 @@ def func_transformation(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name,v_ctrl_Notebook_
         #print(v_gm_left_dataframe,v_gm_right_dataframe,v_gm_resultant_dataframe)
         
         if row["dataframe"] in availableSourceDF:
-        
+            
+            Logs.write(str(datetime.datetime.now())+'\t'+v_gm_transformation_operation+':'+v_gm_transformation_operator+'OperationCodeGenerated\t\n')
+            
             if row['transformation_operation'] == 'arithmetic':
                 executable_code = func_t_arithmetic(v_gm_expression,v_gm_source_column_lst,v_gm_transformation_operator,v_gm_dataframe,v_gm_target_column)
                 #print(executable_code)
-                outF.write('\t' + executable_code + '\n')
+                outF.write('\t' + executable_code + '\n')                                               
             elif row['transformation_operation'] == 'string':
                 executable_code = func_t_string(row["source_column"][0],v_gm_param,v_gm_transformation_operator,v_gm_dataframe,v_gm_target_column)
                 outF.write('\t' + executable_code + '\n')
@@ -328,6 +380,8 @@ def func_partition(df_t,fileType,partCols,path,maxRecords,TargetSchema):
     executable_code=df_t+'.repartition(reParts).write.partitionBy('+str(partCols)+').mode("overwrite").'+fileType+'("'+path+'")'
     outF.write('\t\t' + executable_code + '\n')
     
+    Logs.write(str(datetime.datetime.now())+'\tParitionedFileOutputCodeGenerated\t\n')
+    
 #}
 
 def func_target(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name):
@@ -338,6 +392,7 @@ def func_target(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name):
     with open(v_grammar_Path) as json_file:
         data = json.load(json_file)
     df_target = pd.DataFrame.from_dict(data['target'])
+    
     
     
     for i in df_target.columns:
@@ -352,20 +407,26 @@ def func_target(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name):
             #print(executable_code)
             #outF.write('\t' + executable_code + '\n')
          #}
-         
+        
+
+        Logs.write(str(datetime.datetime.now())+'\tTargetFormatDetected\t'+str(df_target[i]["targetType"])+'\n')
+
+        
         if df_target[i]["targetType"] == "parquet":
         
             if df_target[i]["partition"]["columns"] != "":
                 
+                Logs.write(str(datetime.datetime.now())+'\tDestinationParitioningDetected\t'+str(df_target[i]["partition"]["columns"])+'\n')
                 
                 func_partition(i,df_target[i]["targetType"],df_target[i]["partition"]["columns"],df_target[i]["targetPath"],df_target[i]["partition"]["recNum"],df_target[i]["targetschema"])
-                
                 
                 #executable_code=i+'.write.partitionBy('+str(df_target[i]["partition"]["columns"])+').mode("overwrite").parquet("'+df_target[i]["targetPath"]+'")'
                 #outF.write('\t' + executable_code + '\n')
                 
         #{  
             else:
+            
+                Logs.write(str(datetime.datetime.now())+'\tNoDestinationParitioningDetected\t\n')
             
                 if len(df_target[i]["targetschema"]) != 0:
         
@@ -378,6 +439,11 @@ def func_target(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name):
                 executable_code=""
                 executable_code=i+ '.write.mode("overwrite").parquet("' + df_target[i]["targetPath"] + '")'
                 outF.write('\t' + executable_code + '\n')
+                
+                
+                Logs.write(str(datetime.datetime.now())+'\tNonParitionedFileOutputCodeGenerated\t\n')
+                
+                
         
         elif df_target[i]["targetType"] == "csvv":
         #{
@@ -394,8 +460,14 @@ def func_target(v_ctrl_Grammar_Path,v_ctrl_Grammar_Name):
 def func_notebook_header(v_ctrl_Notebook_Path,v_ctrl_Notebook_Name):
 #{
     global outF;
+     
+      
+     
     v_notbookpath_path  = v_ctrl_Notebook_Path + '\\' + v_ctrl_Notebook_Name 
     outF = open(v_notbookpath_path, "w")
+    
+    Logs.write(str(datetime.datetime.now())+'\tNotbookCreationStarted\t'+v_notbookpath_path+'\n')
+    
     v_header_1 = '''
 import os
 import sys
@@ -469,6 +541,11 @@ def funcValidateGrammar():
 def func_config_read(v_config_path):
 #{
     global outF
+    global Logs
+    
+    Logs.write(str(datetime.datetime.now())+'\tControlFileSuccessfullyLoaded\t'+v_config_path+'\n')
+    
+    
     df_pd_dataflowlist=pd.read_csv(v_config_path , skiprows=0)
     for index, row in df_pd_dataflowlist.iterrows():
         v_ctrl_S_No          = row["S_No"]
@@ -497,6 +574,16 @@ def func_config_read(v_config_path):
 
 if __name__ == '__main__':
 ##{
+    global Logs;
+    
+    log_path = 'C:\\Users\\DELL\\Downloads\\grammarframework\\logs\\'
+    log_file = 'C:\\Users\\DELL\\Downloads\\grammarframework\\logs\\NotebookGeneratorLogDated'+str(date.today())+'.txt'
+    Logs = open(log_file,"a+")
+    Logs.write('-------------New Execution Initiated----------------------\n')
+    
     v_config_path = 'C:\\Users\\DELL\\Downloads\\grammarframework\\Control_pipeline_list.csv'
+    
+    
     func_config_read(v_config_path)
+    
 #}
