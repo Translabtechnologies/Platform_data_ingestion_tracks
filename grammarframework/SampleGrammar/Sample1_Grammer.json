@@ -108,13 +108,12 @@
 			"source_column": ["D"],
 			"target_column": "col_DateConversion",
 			"transformation_operation": "date",
-			"transformation_operator": "UTC",
 			"expression": "None",
 			"params":
 			{
 				"source_timezone":"America/New_York",
 				"source_timeformat":"dd-MM-yyyy HH:mm:ss",
-				"target_timezone":"to_utc_timestamp",
+				"target_timezone":"UTC",
 				"target_timeformat":"dd-MM-yyyy HH:mm:ss"
 			},
 			"transformation_order":6
